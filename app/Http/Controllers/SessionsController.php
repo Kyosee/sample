@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class SessionsController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     /**
      * user login page
      * @return [type] [description]
@@ -24,8 +31,8 @@ class SessionsController extends Controller
             'password' => 'required'
         ]);
 
-        if(Auth::attempt($credentials), $request->has('remember')){
-            return redirect()->route('users.show', Auth::user());
+        if(Auth::attempt($credentials, $request->has('remember'))){
+            return redirect()->intended(route('users.show', Auth::user()));
         }else{
             return redirect()->back();
         }
